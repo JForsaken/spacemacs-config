@@ -136,8 +136,22 @@ Check `dotspacemacs/get-variable-string-list' for all vars you can configure."
 
   ;; Drop-in whatever config here, experiment!
   (spacemacs/set-leader-keys "fg" 'rgrep)
+
+  ;; Rainbow mode
   (add-hook 'prog-mode-hook 'rainbow-mode)
+
+  ;; Fancy symbols
   (setq clojure-enable-fancify-symbols t)
 
+  ;; Disable typescript-tide in favor of eslint
+  (add-hook 'typescript-mode-hook
+            (lambda () (setq-local flycheck-disabled-checkers '(typescript-tide))))
+
+  ;; Workaround for eslint loading slow
+  ;; https://github.com/flycheck/flycheck/issues/1129#issuecomment-319600923
+  (with-eval-after-load 'flycheck
+    (advice-add 'flycheck-eslint-config-exists-p :override (lambda() t)))
+
+  ;; Golden ratio screen sizes
   (golden-ratio-mode 1)
   )
