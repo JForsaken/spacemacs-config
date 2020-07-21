@@ -18,8 +18,8 @@
           shell-default-shell 'eshell)
    syntax-checking
 
-
    ;; Misc
+   spacemacs-prettier
    graphviz
    ranger
    (ibuffer :variables

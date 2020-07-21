@@ -143,6 +143,10 @@ Check `dotspacemacs/get-variable-string-list' for all vars you can configure."
   ;; Fancy symbols
   (setq clojure-enable-fancify-symbols t)
 
+  ;; prettier
+  (add-hook 'js2-mode-hook 'prettier-js-mode)
+  (add-hook 'web-mode-hook 'prettier-js-mode)
+
   ;; Disable typescript-tide in favor of eslint
   (add-hook 'typescript-mode-hook
             (flycheck-add-mode 'javascript-eslint 'web-mode)
