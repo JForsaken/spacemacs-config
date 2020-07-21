@@ -145,7 +145,12 @@ Check `dotspacemacs/get-variable-string-list' for all vars you can configure."
 
   ;; Disable typescript-tide in favor of eslint
   (add-hook 'typescript-mode-hook
+            (flycheck-add-mode 'javascript-eslint 'web-mode)
+            (lambda () (setq-local flycheck-enabled-checkers '(javascript-eslint)))
             (lambda () (setq-local flycheck-disabled-checkers '(typescript-tide))))
+
+
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
 
   ;; Workaround for eslint loading slow
   ;; https://github.com/flycheck/flycheck/issues/1129#issuecomment-319600923
