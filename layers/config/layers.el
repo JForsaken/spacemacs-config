@@ -20,6 +20,7 @@
 
    ;; Misc
    spacemacs-prettier
+   add-node-modules-path
    graphviz
    ranger
    (ibuffer :variables
@@ -46,7 +47,7 @@
                js-indent-level 2 )
    (typescript :variables
                typescript-backend 'tide
-               typescript-linter 'javascript-eslint
+               typescript-linter 'eslint
                typescript-fmt-tool 'prettier
                typescript-fmt-on-save t)
    haskell

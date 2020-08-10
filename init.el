@@ -143,23 +143,20 @@ Check `dotspacemacs/get-variable-string-list' for all vars you can configure."
   ;; Fancy symbols
   (setq clojure-enable-fancify-symbols t)
 
-  ;; prettier
-  (add-hook 'js2-mode-hook 'prettier-js-mode)
-  (add-hook 'web-mode-hook 'prettier-js-mode)
-
-  ;; Disable typescript-tide in favor of eslint
-  (add-hook 'typescript-mode-hook
-            (flycheck-add-mode 'javascript-eslint 'web-mode)
-            (lambda () (setq-local flycheck-enabled-checkers '(javascript-eslint)))
-            (lambda () (setq-local flycheck-disabled-checkers '(typescript-tide))))
-
-
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-
   ;; Workaround for eslint loading slow
   ;; https://github.com/flycheck/flycheck/issues/1129#issuecomment-319600923
   (with-eval-after-load 'flycheck
     (advice-add 'flycheck-eslint-config-exists-p :override (lambda() t)))
+
+  ;; add node modules to $PATH
+  (eval-after-load 'js-mode
+    '(add-hook 'js-mode-hook #'add-node-modules-path))
+  (eval-after-load 'js2-mode
+    '(add-hook 'js2-mode-hook #'add-node-modules-path))
+  (eval-after-load 'web-mode
+    '(add-hook 'web-mode-hook #'add-node-modules-path))
+  (eval-after-load 'typescript-mode
+    '(add-hook 'typescript-mode-hook #'add-node-modules-path))
 
   ;; Golden ratio screen sizes
   (golden-ratio-mode 1)
