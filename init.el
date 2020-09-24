@@ -93,7 +93,9 @@ Check `dotspacemacs/get-variable-string-list' for all vars you can configure."
                                            (display  :location local)
                                            (personal :location local))
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
-   dotspacemacs-additional-packages      '(buttercup)
+   dotspacemacs-additional-packages
+   '((eslint-fix :location (recipe :fetcher github :repo "codesuki/eslint-fix"))(buttercup))
+
    dotspacemacs-frozen-packages          '()
    dotspacemacs-excluded-packages
    '(;; Must Exclude (for styling, functionality, bug-fixing reasons)
@@ -142,6 +144,21 @@ Check `dotspacemacs/get-variable-string-list' for all vars you can configure."
 
   ;; Fancy symbols
   (setq clojure-enable-fancify-symbols t)
+
+  ;; prettier
+  (add-hook 'js2-mode-hook 'prettier-js-mode)
+  (add-hook 'web-mode-hook 'prettier-js-mode)
+
+  ;; eslint-fix
+  (eval-after-load 'js-mode
+    '(add-hook 'js-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix nil t))))
+  (eval-after-load 'js2-mode
+    '(add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix nil t))))
+  (eval-after-load 'web-mode
+    '(add-hook 'web-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix nil t))))
+  (eval-after-load 'typescript-mode
+    '(add-hook 'typescript-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix nil t))))
+
 
   ;; Workaround for eslint loading slow
   ;; https://github.com/flycheck/flycheck/issues/1129#issuecomment-319600923
