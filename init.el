@@ -94,7 +94,7 @@ Check `dotspacemacs/get-variable-string-list' for all vars you can configure."
                                            (personal :location local))
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-additional-packages
-   '((eslint-fix :location (recipe :fetcher github :repo "codesuki/eslint-fix"))(buttercup))
+   '(buttercup (eslint-fix :location (recipe :fetcher github :repo "codesuki/eslint-fix")))
 
    dotspacemacs-frozen-packages          '()
    dotspacemacs-excluded-packages

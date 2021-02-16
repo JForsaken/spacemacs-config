@@ -36,11 +36,13 @@
    terraform
 
    ;; Languages
+   solidity
    clojure
    emacs-lisp
    osx
    prettier
    react
+   python
    (javascript :variables
                javascript-fmt-tool 'prettier
                js2-basic-offset 2
