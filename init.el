@@ -591,6 +591,8 @@ before packages are loaded."
   (add-hook 'web-mode-hook 'emmet-mode)
   (add-hook 'typescript-mode-hook 'emmet-mode)
 
+  ;; grep
+  (spacemacs/set-leader-keys "fg" 'rgrep)
 
   ;; indentation
   (setq-default indent-tabs-mode nil)
