@@ -51,9 +51,11 @@ This function should only modify configuration layer settings."
      (javascript :variables
                  javascript-backend 'tide
                  node-add-modules-path t)
+     (node :variables node-add-modules-path t)
 
      ;; utils
      git
+     prettier
      emoji
 
      ;; lsp
@@ -586,6 +588,11 @@ before packages are loaded."
   (add-hook 'js2-mode-hook 'eslintd-fix-mode)
   (add-hook 'web-mode-hook 'eslintd-fix-mode)
   (add-hook 'typescript-mode-hook 'eslintd-fix-mode)
+  (add-hook 'json-mode-hook 'eslintd-fix-mode)
+
+  ;; prettier
+  (add-hook 'scss-mode-hook 'prettier-js-mode)
+  (add-hook 'css-mode-hook 'prettier-js-mode)
 
   ;; emmet
   (add-hook 'web-mode-hook 'emmet-mode)
@@ -609,6 +616,10 @@ before packages are loaded."
 
   ;; matching symbols
   (add-hook 'prog-mode-hook 'rainbow-mode)
+
+  ;; frame golden ratio
+  (golden-ratio-mode 1)
+
 
   ;; Font Ligatures
   (defun my-correct-symbol-bounds (pretty-alist)
@@ -666,7 +677,7 @@ This function is called at the very end of Spacemacs initialization."
    ;; If there is more than one, they won't work right.
    '(evil-want-Y-yank-to-eol nil)
    '(package-selected-packages
-     '(evil-surround rjsx-mode company-statistics company-quickhelp reveal-in-osx-finder osx-trash osx-dictionary osx-clipboard launchctl wgrep treemacs-magit smex smeargle magit-svn magit-section magit-gitflow magit-popup lsp-ivy ivy-yasnippet ivy-xref ivy-hydra ivy-avy gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link forge magit ghub closql emacsql-sqlite emacsql treepy git-commit with-editor transient counsel-css counsel swiper ivy yasnippet-snippets lsp-ui lsp-treemacs lsp-origami origami helm-lsp lsp-mode markdown-mode spinner helm-company helm-c-yasnippet fuzzy flycheck-pos-tip pos-tip company-web web-completion-data company auto-yasnippet ac-ispell auto-complete web-mode web-beautify unfill tide typescript-mode tagedit slim-mode scss-mode sass-mode pug-mode prettier-js npm-mode nodejs-repl mwim livid-mode skewer-mode json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc impatient-mode htmlize simple-httpd helm-css-scss haml-mode evil-commentary emmet-mode add-node-modules-path treemacs-projectile treemacs-icons-dired treemacs-evil treemacs cfrs ht pfuture ace-window posframe overseer f nameless macrostep helm-xref helm-themes helm-swoop counsel-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-flx flx helm-descbinds helm-ag flycheck-package package-lint flycheck flycheck-elsa evil-mc emr iedit clang-format projectile paredit list-utils s pkg-info epl elisp-slime-nav dash auto-compile packed ace-jump-helm-line helm avy helm-core popup which-key use-package pcre2el hydra lv hybrid-mode evil goto-chg dotenv-mode diminish bind-map bind-key async)))
+     '(yapfify sphinx-doc pytest pyenv-mode py-isort poetry pippel pipenv pyvenv pip-requirements lsp-python-ms lsp-pyright live-py-mode importmagic epc ctable concurrent deferred emojify emoji-cheat-sheet-plus dockerfile-mode docker tablist docker-tramp cython-mode company-terraform terraform-mode hcl-mode company-emoji company-anaconda blacken anaconda-mode pythonic evil-surround rjsx-mode company-statistics company-quickhelp reveal-in-osx-finder osx-trash osx-dictionary osx-clipboard launchctl wgrep treemacs-magit smex smeargle magit-svn magit-section magit-gitflow magit-popup lsp-ivy ivy-yasnippet ivy-xref ivy-hydra ivy-avy gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link forge magit ghub closql emacsql-sqlite emacsql treepy git-commit with-editor transient counsel-css counsel swiper ivy yasnippet-snippets lsp-ui lsp-treemacs lsp-origami origami helm-lsp lsp-mode markdown-mode spinner helm-company helm-c-yasnippet fuzzy flycheck-pos-tip pos-tip company-web web-completion-data company auto-yasnippet ac-ispell auto-complete web-mode web-beautify unfill tide typescript-mode tagedit slim-mode scss-mode sass-mode pug-mode prettier-js npm-mode nodejs-repl mwim livid-mode skewer-mode json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc impatient-mode htmlize simple-httpd helm-css-scss haml-mode evil-commentary emmet-mode add-node-modules-path treemacs-projectile treemacs-icons-dired treemacs-evil treemacs cfrs ht pfuture ace-window posframe overseer f nameless macrostep helm-xref helm-themes helm-swoop counsel-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-flx flx helm-descbinds helm-ag flycheck-package package-lint flycheck flycheck-elsa evil-mc emr iedit clang-format projectile paredit list-utils s pkg-info epl elisp-slime-nav dash auto-compile packed ace-jump-helm-line helm avy helm-core popup which-key use-package pcre2el hydra lv hybrid-mode evil goto-chg dotenv-mode diminish bind-map bind-key async)))
   (custom-set-faces
    ;; custom-set-faces was added by Custom.
    ;; If you edit it by hand, you could mess it up, so be careful.
