@@ -52,6 +52,7 @@ This function should only modify configuration layer settings."
      docker
      terraform
      python
+     go
      (typescript :variables
                  typescript-backend 'tide
                  typescript-linter 'eslint)
