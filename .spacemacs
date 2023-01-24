@@ -66,6 +66,7 @@ This function should only modify configuration layer settings."
      git
      prettier
      emoji
+     dap
 
      ;; lsp
      auto-completion
