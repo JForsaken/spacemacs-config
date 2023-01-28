@@ -52,7 +52,12 @@ This function should only modify configuration layer settings."
      docker
      terraform
      python
-     go
+     (go :variables
+         go-backend 'lsp
+         go-format-before-save t
+         )
+     dap
+
      (typescript :variables
                  typescript-backend 'tide
                  typescript-linter 'eslint)
@@ -66,7 +71,6 @@ This function should only modify configuration layer settings."
      git
      prettier
      emoji
-     dap
 
      ;; lsp
      auto-completion
