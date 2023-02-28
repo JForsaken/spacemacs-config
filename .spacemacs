@@ -32,8 +32,10 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(octave
-     rust
+   '(csv
+     octave
+     (rust :variables
+           rust-format-on-save t)
      sql
      systemd
      protobuf
@@ -59,10 +61,10 @@ This function should only modify configuration layer settings."
      dap
 
      (typescript :variables
-                 typescript-backend 'tide
+                 typescript-backend 'lsp
                  typescript-linter 'eslint)
      (javascript :variables
-                 javascript-backend 'tide
+                 javascript-backend 'lsp
                  node-add-modules-path t)
      (node :variables node-add-modules-path t)
 
@@ -76,8 +78,14 @@ This function should only modify configuration layer settings."
      auto-completion
      syntax-checking
      emacs-lisp
-     lsp
-     tide
+     (lsp :variables
+          lsp-ui-doc-enable t
+          lsp-ui-sideline-code-actions-prefix " "
+          lsp-ui-sideline-show-hover nil
+          lsp-rust-server 'rust-analyzer
+          lsp-clients-typescript-tls-path "/Users/justinderrico/Library/pnpm/typescript-language-server"
+          lsp-rust-analyzer-server-display-inlay-hints t
+          )
 
      ;; spacemacs
      osx
@@ -262,7 +270,10 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         doom-vibrant
+                         doom-material-dark
                          spacemacs-dark
+                         solarized-wombat-dark
                          sanityinc-tomorrow-night
                          spacemacs-light)
 
@@ -594,32 +605,6 @@ before packages are loaded."
   (define-key evil-insert-state-map (kbd "C-<tab>") 'copilot-accept-completion-by-word)
   (define-key evil-insert-state-map (kbd "C-TAB") 'copilot-accept-completion-by-word)
 
-
-  ;; typescript server
-  (defun tide-setup-hook ()
-    (tide-setup)
-    (eldoc-mode)
-    (tide-hl-identifier-mode +1)
-    (setq web-mode-enable-auto-quoting nil)
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-code-indent-offset 2)
-    (setq web-mode-attr-indent-offset 2)
-    (setq web-mode-attr-value-indent-offset 2)
-    (set (make-local-variable 'company-backends)
-         '((company-tide company-files :with company-yasnippet)
-           (company-dabbrev-code company-dabbrev))))
-
-  ;; use rjsx-mode for .js* files except json and use tide with rjsx
-  (add-to-list 'auto-mode-alist '("\\.js.*$" . rjsx-mode))
-  (add-to-list 'auto-mode-alist '("\\.tsx$" . rjsx-mode))
-  (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
-  (add-hook 'rjsx-mode-hook 'tide-setup-hook)
-
-  (add-hook 'web-mode-hook 'tide-setup-hook
-            (lambda () (pcase (file-name-extension buffer-file-name)
-                         ("tsx" ('tide-setup-hook))
-                         (_ (my-web-mode-hook)))))
-  (add-hook 'web-mode-hook 'company-mode) (add-hook 'web-mode-hook #'turn-on-smartparens-mode t)
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 
   ;; eslint auto fix
@@ -724,7 +709,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
-   '(copilot cargo counsel-gtags flycheck-rust ggtags helm-gtags racer ron-mode rust-mode toml-mode ace-link code-cells color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow lsp-docker doom-themes evil-anzu google-translate inspector request string-inflection terminal-here compat treemacs-persp persp-mode vterm flatland-theme flatui-theme gandalf-theme gotham-theme grandshell-theme gruber-darker-theme gruvbox-theme hc-zenburn-theme hemisu-theme heroku-theme inkpot-theme ir-black-theme jazz-theme jbeans-theme kaolin-themes light-soap-theme lush-theme madhat2r-theme majapahit-theme material-theme minimal-theme modus-themes moe-theme molokai-theme monochrome-theme monokai-theme mustang-theme naquadah-theme noctilux-theme obsidian-theme occidental-theme oldlace-theme omtose-phellack-theme organic-green-theme phoenix-dark-mono-theme phoenix-dark-pink-theme planet-theme professional-theme purple-haze-theme railscasts-theme rebecca-theme reverse-theme seti-theme smyx-theme soft-charcoal-theme soft-morning-theme soft-stone-theme solarized-theme soothe-theme autothemer spacegray-theme subatomic-theme subatomic256-theme sublime-themes sunny-day-theme tango-2-theme tango-plus-theme tangotango-theme tao-theme toxi-theme twilight-anti-bright-theme twilight-bright-theme twilight-theme ujelly-theme underwater-theme white-sand-theme zen-and-art-theme zenburn-theme zonokai-emacs sqlup-mode sql-indent systemd dap-mode bui protobuf-mode yaml-mode yapfify sphinx-doc pytest pyenv-mode py-isort poetry pippel pipenv pyvenv pip-requirements lsp-python-ms lsp-pyright live-py-mode importmagic epc ctable concurrent deferred emojify emoji-cheat-sheet-plus dockerfile-mode docker tablist docker-tramp cython-mode company-terraform terraform-mode hcl-mode company-emoji company-anaconda blacken anaconda-mode pythonic evil-surround rjsx-mode company-statistics company-quickhelp reveal-in-osx-finder osx-trash osx-dictionary osx-clipboard launchctl wgrep treemacs-magit smex smeargle magit-svn magit-section magit-gitflow magit-popup lsp-ivy ivy-yasnippet ivy-xref ivy-hydra ivy-avy gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link forge magit ghub closql emacsql-sqlite emacsql treepy git-commit with-editor transient counsel-css counsel swiper ivy yasnippet-snippets lsp-ui lsp-treemacs lsp-origami origami helm-lsp lsp-mode markdown-mode spinner helm-company helm-c-yasnippet fuzzy flycheck-pos-tip pos-tip company-web web-completion-data company auto-yasnippet ac-ispell auto-complete web-mode web-beautify unfill tide typescript-mode tagedit slim-mode scss-mode sass-mode pug-mode prettier-js npm-mode nodejs-repl mwim livid-mode skewer-mode json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc impatient-mode htmlize simple-httpd helm-css-scss haml-mode evil-commentary emmet-mode add-node-modules-path treemacs-projectile treemacs-icons-dired treemacs-evil treemacs cfrs ht pfuture ace-window posframe overseer f nameless macrostep helm-xref helm-themes helm-swoop counsel-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-flx flx helm-descbinds helm-ag flycheck-package package-lint flycheck flycheck-elsa evil-mc emr iedit clang-format projectile paredit list-utils s pkg-info epl elisp-slime-nav dash auto-compile packed ace-jump-helm-line helm avy helm-core popup which-key use-package pcre2el hydra lv hybrid-mode evil goto-chg dotenv-mode diminish bind-map bind-key async)))
+   '(csv-mode copilot cargo counsel-gtags flycheck-rust ggtags helm-gtags racer ron-mode rust-mode toml-mode ace-link code-cells color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow lsp-docker doom-themes evil-anzu google-translate inspector request string-inflection terminal-here compat treemacs-persp persp-mode vterm flatland-theme flatui-theme gandalf-theme gotham-theme grandshell-theme gruber-darker-theme gruvbox-theme hc-zenburn-theme hemisu-theme heroku-theme inkpot-theme ir-black-theme jazz-theme jbeans-theme kaolin-themes light-soap-theme lush-theme madhat2r-theme majapahit-theme material-theme minimal-theme modus-themes moe-theme molokai-theme monochrome-theme monokai-theme mustang-theme naquadah-theme noctilux-theme obsidian-theme occidental-theme oldlace-theme omtose-phellack-theme organic-green-theme phoenix-dark-mono-theme phoenix-dark-pink-theme planet-theme professional-theme purple-haze-theme railscasts-theme rebecca-theme reverse-theme seti-theme smyx-theme soft-charcoal-theme soft-morning-theme soft-stone-theme solarized-theme soothe-theme autothemer spacegray-theme subatomic-theme subatomic256-theme sublime-themes sunny-day-theme tango-2-theme tango-plus-theme tangotango-theme tao-theme toxi-theme twilight-anti-bright-theme twilight-bright-theme twilight-theme ujelly-theme underwater-theme white-sand-theme zen-and-art-theme zenburn-theme zonokai-emacs sqlup-mode sql-indent systemd dap-mode bui protobuf-mode yaml-mode yapfify sphinx-doc pytest pyenv-mode py-isort poetry pippel pipenv pyvenv pip-requirements lsp-python-ms lsp-pyright live-py-mode importmagic epc ctable concurrent deferred emojify emoji-cheat-sheet-plus dockerfile-mode docker tablist docker-tramp cython-mode company-terraform terraform-mode hcl-mode company-emoji company-anaconda blacken anaconda-mode pythonic evil-surround rjsx-mode company-statistics company-quickhelp reveal-in-osx-finder osx-trash osx-dictionary osx-clipboard launchctl wgrep treemacs-magit smex smeargle magit-svn magit-section magit-gitflow magit-popup lsp-ivy ivy-yasnippet ivy-xref ivy-hydra ivy-avy gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link forge magit ghub closql emacsql-sqlite emacsql treepy git-commit with-editor transient counsel-css counsel swiper ivy yasnippet-snippets lsp-ui lsp-treemacs lsp-origami origami helm-lsp lsp-mode markdown-mode spinner helm-company helm-c-yasnippet fuzzy flycheck-pos-tip pos-tip company-web web-completion-data company auto-yasnippet ac-ispell auto-complete web-mode web-beautify unfill tide typescript-mode tagedit slim-mode scss-mode sass-mode pug-mode prettier-js npm-mode nodejs-repl mwim livid-mode skewer-mode json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc impatient-mode htmlize simple-httpd helm-css-scss haml-mode evil-commentary emmet-mode add-node-modules-path treemacs-projectile treemacs-icons-dired treemacs-evil treemacs cfrs ht pfuture ace-window posframe overseer f nameless macrostep helm-xref helm-themes helm-swoop counsel-projectile helm-org helm-mode-manager helm-make helm-ls-git helm-flx flx helm-descbinds helm-ag flycheck-package package-lint flycheck flycheck-elsa evil-mc emr iedit clang-format projectile paredit list-utils s pkg-info epl elisp-slime-nav dash auto-compile packed ace-jump-helm-line helm avy helm-core popup which-key use-package pcre2el hydra lv hybrid-mode evil goto-chg dotenv-mode diminish bind-map bind-key async)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
